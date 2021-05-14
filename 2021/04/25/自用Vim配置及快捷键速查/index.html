@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LYON'S BLOG" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="自用Vim配置及快捷键速查配置文件地址https:&#x2F;&#x2F;github.com&#x2F;Lyon52222&#x2F;neovim 快捷键基本操作这里我只列举初一些常用的，需要记住的，更多的操作查看上一篇博客：Vim操作大全 移动gg -&gt; 跳转到文档第一行 G -&gt; 跳转到文档最后一行 nG,ngg -&gt; 跳转到第n行 % -&gt; 跳转到括号对应位置 H -&gt; 光标移动到当前可视区域最上面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自用Vim配置及快捷键速查">
+<meta property="og:url" content="http://example.com/2021/04/25/%E8%87%AA%E7%94%A8Vim%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5/index.html">
+<meta property="og:site_name" content="LYON&#39;S BLOG">
+<meta property="og:description" content="自用Vim配置及快捷键速查配置文件地址https:&#x2F;&#x2F;github.com&#x2F;Lyon52222&#x2F;neovim 快捷键基本操作这里我只列举初一些常用的，需要记住的，更多的操作查看上一篇博客：Vim操作大全 移动gg -&gt; 跳转到文档第一行 G -&gt; 跳转到文档最后一行 nG,ngg -&gt; 跳转到第n行 % -&gt; 跳转到括号对应位置 H -&gt; 光标移动到当前可视区域最上面">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-04-25T13:54:08.000Z">
+<meta property="article:modified_time" content="2021-05-09T10:12:32.983Z">
+<meta property="article:author" content="Lyon">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/04/25/自用Vim配置及快捷键速查/"/>
+
+
+
+
+
+  <title>自用Vim配置及快捷键速查 | LYON'S BLOG</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LYON'S BLOG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">In me the tiger sniffs the rose.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/25/%E8%87%AA%E7%94%A8Vim%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LYON'S BLOG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">自用Vim配置及快捷键速查</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-25T21:54:08+08:00">
+                2021-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/04/25/%E8%87%AA%E7%94%A8Vim%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/04/25/%E8%87%AA%E7%94%A8Vim%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="自用Vim配置及快捷键速查"><a href="#自用Vim配置及快捷键速查" class="headerlink" title="自用Vim配置及快捷键速查"></a>自用Vim配置及快捷键速查</h1><h2 id="配置文件地址"><a href="#配置文件地址" class="headerlink" title="配置文件地址"></a>配置文件地址</h2><p><a target="_blank" rel="noopener" href="https://github.com/Lyon52222/neovim">https://github.com/Lyon52222/neovim</a></p>
+<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><p>这里我只列举初一些常用的，需要记住的，更多的操作查看上一篇博客：Vim操作大全</p>
+<h4 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h4><pre><code>gg -&gt; 跳转到文档第一行
+G -&gt; 跳转到文档最后一行
+nG,ngg -&gt; 跳转到第n行
+% -&gt; 跳转到括号对应位置
+H -&gt; 光标移动到当前可视区域最上面
+M -&gt; 光标移动到当前可视区域中间
+L -&gt; 光标移动到当前可视区域最下面
+&lt;C-u&gt; -&gt; 向上翻半页
+&lt;C-d&gt; -&gt; 向下翻半页
+&lt;C-f&gt; -&gt; 向下翻页
+&lt;C-b&gt; -&gt; 向上翻页
+\$ -&gt; 移动到行首
+^ -&gt; 移动到行尾
+fa -&gt; 向后查找当前行a出现的位置，并跳转
+Fa -&gt; 向前查找当前行a出现的位置，并跳转
+
+
+m&#123;a-zA-Z&#125; -&gt; 给当前位置打一个标签，a-z对当前文档有效，A-Z可以跨文档使用
+&#39;&#123;a-zA-Z&#125; -&gt; 跳转回标记位置
+&#39;[ -&gt; 跳转到上次编辑的第一个字符
+&#39;[ -&gt; 跳转到上次编辑的最后一个字符
+</code></pre><h4 id="插入模式"><a href="#插入模式" class="headerlink" title="插入模式"></a>插入模式</h4><pre><code>CTRL-M/CTRL-J -&gt; 开始新行
+CTRL-E -&gt; 插入光标下的内容
+CTRL-Y -&gt; 插入光标上方的字符
+CTRL-A -&gt; 插入上次插入的文本
+CTRL-@ -&gt; 插入上次插入的文本并结束插入模式
+CTRL-R &#123;0-9a-z%#:.-=&quot;&#125; -&gt; 插入寄存器的内容
+CTRL-W -&gt; 删除光标前的一个单词
+CTRL-U -&gt; 删除当前行的所有字符
+CTRL-T -&gt; 在当前行首插入一个移位宽度的缩进
+CTRL-D -&gt; 从当前行首删除一个移位宽度的缩进
+0 CTRL-D -&gt; 删除当前行的所有缩进
+^ CTRL-D -&gt; 删除当前行的所有缩进，恢复下一行的缩进
+</code></pre><h4 id="编辑"><a href="#编辑" class="headerlink" title="编辑"></a>编辑</h4><pre><code>i -&gt; 在当前光标之前插入
+I -&gt; 在当前行首插入
+a -&gt; 在当前位置之后插入
+A -&gt; 在当前行末插入
+</code></pre><h4 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h4><pre><code>r -&gt; 替换当前位置字符
+R -&gt; 从当前位置开始一次替换后面的字符，按ESC退出
+cc -&gt; 修改光标所在行
+cw -&gt; 删除从当前位置到该单词的末尾，并进入插入模式
+caw -&gt; 删除当前光标所在单词，并进入插入模式
+c\$ -&gt; 从当前位置删除到行尾，并进入插入模式
+c^ -&gt; 从当前位置删除到行首，并进入插入模式
+ci&quot; -&gt; 删除两端&quot;中间的内容，并进入插入模式
+ca&quot; -&gt; 删除两端&quot;以及中间的内容，并进入插入模式
+</code></pre><h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><pre><code>x -&gt; 删除当前位置字符
+X -&gt; 删除当前位置前一个字符
+dd,dw,daw,s\$,d^,di&quot;,da&quot; -&gt; 同上
+</code></pre><h4 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h4><pre><code>yy,yw,yaw,y\$,y^,yi(,ya( -&gt; 同上
+</code></pre><h4 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h4><pre><code>u -&gt; 撤销上一次操作
+U -&gt; 撤销当前行的所有操作
+</code></pre><h4 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h4><pre><code>fw -&gt; 保存文件
+fq -&gt; 退出文件
+fwq -&gt; 保存并退出文件
+fqq -&gt; 放弃保存直接退出文件
+</code></pre><h4 id="编辑模式光标移动"><a href="#编辑模式光标移动" class="headerlink" title="编辑模式光标移动"></a>编辑模式光标移动</h4><pre><code>&lt;M-l&gt; -&gt; 光标右移
+&lt;M-k&gt; -&gt; 光标上移
+&lt;M-j&gt; -&gt; 光标下移
+&lt;M-h&gt; -&gt; 光标左移
+</code></pre><h4 id="快速选择窗口"><a href="#快速选择窗口" class="headerlink" title="快速选择窗口"></a>快速选择窗口</h4><pre><code>&lt;S-l&gt; -&gt; 选择右边窗口
+&lt;S-k&gt; -&gt; 选择上边窗口
+&lt;S-j&gt; -&gt; 选择下边窗口
+&lt;S-h&gt; -&gt; 选择左边窗口
+</code></pre><h4 id="划分窗口"><a href="#划分窗口" class="headerlink" title="划分窗口"></a>划分窗口</h4><pre><code>&lt;leader&gt;sp -&gt; 纵向划分窗口    
+&lt;leader&gt;vs -&gt; 横向划分窗口    
+</code></pre><h4 id="调整窗口大小"><a href="#调整窗口大小" class="headerlink" title="调整窗口大小"></a>调整窗口大小</h4><pre><code>&lt;M-l&gt;
+&lt;M-k&gt;
+&lt;M-j&gt;
+&lt;M-h&gt;
+</code></pre><h4 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h4><pre><code>; -&gt; 重复上一次的查找操作
+. -&gt; 重复上一次的修改操作
+</code></pre><h3 id="插件快捷键"><a href="#插件快捷键" class="headerlink" title="插件快捷键"></a>插件快捷键</h3><h4 id="vim-startify"><a href="#vim-startify" class="headerlink" title="vim-startify"></a>vim-startify</h4><pre><code>&lt;leader&gt;st -&gt; 回到初始界面
+</code></pre><h4 id="NERDTree"><a href="#NERDTree" class="headerlink" title="NERDTree"></a>NERDTree</h4><pre><code>&lt;S-n&gt; -&gt; 打开/关闭文件树
+</code></pre><h4 id="MarkdownPreview"><a href="#MarkdownPreview" class="headerlink" title="MarkdownPreview"></a>MarkdownPreview</h4><pre><code>&lt;C-p&gt; -&gt; 打开/关闭Markdown预览
+[[ -&gt; 跳转上一个标题
+]] -&gt; 跳转下一个标题
+]c -&gt; 跳转到当前标题
+]u -&gt; 跳转到副标题
+zr -&gt; 打开下一级折叠
+zR -&gt; 打开所有折叠
+zm -&gt; 折叠当前段落
+zM -&gt; 折叠所有段落
+</code></pre><h4 id="vim-airline"><a href="#vim-airline" class="headerlink" title="vim-airline"></a>vim-airline</h4><pre><code>&lt;leader&gt;&#123;i&#125; -&gt; 切换到第i个标签
+&lt;leader&gt;- -&gt; 切换到前一个标签
+&lt;leader&gt;+ -&gt; 切换到上一个标签
+</code></pre><h4 id="leetcode"><a href="#leetcode" class="headerlink" title="leetcode"></a>leetcode</h4><pre><code>&lt;leader&gt;li -&gt; 登陆leetcode    
+&lt;leader&gt;ll -&gt; 列出问题列表
+&lt;leader&gt;lt -&gt; 测试代码    
+&lt;leader&gt;ls -&gt; 提交代码
+</code></pre><h4 id="easymotion"><a href="#easymotion" class="headerlink" title="easymotion"></a>easymotion</h4><pre><code>&lt;leader&gt;&lt;leader&gt;w -&gt; 触发单词级移动，文本会被高亮，输入对应字母进行跳转
+&lt;leader&gt;&lt;leader&gt;b -&gt; 从光标开始往上在单词之间移动光标
+&lt;leader&gt;&lt;leader&gt;s -&gt; 从光标开始同时向两侧在单词之间移动光标
+&lt;leader&gt;&lt;leader&gt;fo -&gt; 字母o对应的地方会被高亮，输入对应字母进行跳转
+</code></pre><h4 id="vim-surround"><a href="#vim-surround" class="headerlink" title="vim-surround"></a>vim-surround</h4><pre><code>ysiw&quot; -&gt; 单词周围加双引号 
+ysiw( -&gt; 左括号带空格
+ysiw) -&gt; 右括号不带空格
+ysiWb -&gt; 以空格为边界加大括号，B代表不带空格的打括号
+yss&lt;div&gt; -&gt; 整行前后加&lt;div&gt;
+S,&quot; -&gt; v模式选中区域前后加&quot;
+S,&lt;div&gt; -&gt; V模式前后区域加&lt;div&gt;,这里&lt;div&gt;会独占一行
+cs&quot;&#39; -&gt; 修改选中内容两端的&quot;为&#39;
+ds&quot; -&gt; 删除选中内容两端的&quot;
+</code></pre><h4 id="nerdcommenter"><a href="#nerdcommenter" class="headerlink" title="nerdcommenter"></a>nerdcommenter</h4><pre><code>&lt;leader&gt;cc -&gt; 注释当前行
+&lt;leader&gt;cn -&gt; 同cc，不过强制nesting
+&lt;leader&gt;c&lt;leader&gt; -&gt; 切换当前行的注释状态
+&lt;leader&gt;cm -&gt; 多行注释
+&lt;leader&gt;ci -&gt; 切换选中行的注释状态
+</code></pre><h4 id="vim-visual-multi"><a href="#vim-visual-multi" class="headerlink" title="vim-visual-multi"></a>vim-visual-multi</h4><pre><code>&lt;C-n&gt; -&gt; 选择单词
+n/N -&gt; 选择下一个/上一个目标词
+q -&gt; 跳过当前词
+Q -&gt; 取消选择当前词
+</code></pre><h4 id="ultisnips"><a href="#ultisnips" class="headerlink" title="ultisnips"></a>ultisnips</h4><pre><code>&lt;tab&gt; -&gt; 自动扩展
+</code></pre><h4 id="autopep8"><a href="#autopep8" class="headerlink" title="autopep8"></a>autopep8</h4><pre><code>&lt;F8&gt; -&gt; 自动格式化Python代码
+</code></pre><h4 id="coc-nvim"><a href="#coc-nvim" class="headerlink" title="coc.nvim"></a>coc.nvim</h4><pre><code>&lt;M-tab&gt; -&gt; 向下选择补全
+&lt;S-tab&gt; -&gt; 向上选择补全
+[g -&gt; coc-diagnostic-prev
+]g -&gt; coc-diagnostic-next
+gd -&gt; coc-definition
+gy -&gt; coc-type-definition
+gi -&gt; coc-inplementation
+gr -&gt; coc-references
+&lt;leader&gt;rn -&gt; coc-rename
+&lt;leader&gt;f -&gt; formatting selected code
+K -&gt; show the documentation
+</code></pre><h4 id="vimtex"><a href="#vimtex" class="headerlink" title="vimtex"></a>vimtex</h4><pre><code>\ll -&gt; 开始编译，后面每次保存都会自动编译同步
+\lv -&gt; 打开pdf预览
+\lk or \ll -&gt; 关闭编译
+\le -&gt; 显示错误和警告
+\lc -&gt; 清除多余文件
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+
+    
+
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/20/Vim%E6%93%8D%E4%BD%9C%E5%A4%A7%E5%85%A8/" rel="next" title="Vim操作大全">
+                <i class="fa fa-chevron-left"></i> Vim操作大全
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/04/27/Git/" rel="prev" title="Git">
+                Git <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+
+    </footer>
+    
+        <div>
+          <iframe src="https://lyon52222.github.io/sponsor-page/drinks/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
+        </div>
+      
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <!--<a href="/archives/%7C%7C%20archive">-->
+                <a href="/archives/">
+
+              
+                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Lyon52222" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:lyon.tolean@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E7%94%A8Vim%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%BF%AB%E6%8D%B7%E9%94%AE%E9%80%9F%E6%9F%A5"><span class="nav-number">1.</span> <span class="nav-text">自用Vim配置及快捷键速查</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%9C%B0%E5%9D%80"><span class="nav-number">1.1.</span> <span class="nav-text">配置文件地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">1.2.</span> <span class="nav-text">快捷键</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">1.2.1.</span> <span class="nav-text">基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">插入模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%BE%91"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">编辑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-number">1.2.1.5.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6"><span class="nav-number">1.2.1.6.</span> <span class="nav-text">复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%92%A4%E9%94%80"><span class="nav-number">1.2.1.7.</span> <span class="nav-text">撤销</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="nav-number">1.2.1.8.</span> <span class="nav-text">文件操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%BE%91%E6%A8%A1%E5%BC%8F%E5%85%89%E6%A0%87%E7%A7%BB%E5%8A%A8"><span class="nav-number">1.2.1.9.</span> <span class="nav-text">编辑模式光标移动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9%E7%AA%97%E5%8F%A3"><span class="nav-number">1.2.1.10.</span> <span class="nav-text">快速选择窗口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%92%E5%88%86%E7%AA%97%E5%8F%A3"><span class="nav-number">1.2.1.11.</span> <span class="nav-text">划分窗口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E7%AA%97%E5%8F%A3%E5%A4%A7%E5%B0%8F"><span class="nav-number">1.2.1.12.</span> <span class="nav-text">调整窗口大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E5%AE%83"><span class="nav-number">1.2.1.13.</span> <span class="nav-text">其它</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">插件快捷键</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#vim-startify"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">vim-startify</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NERDTree"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">NERDTree</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MarkdownPreview"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">MarkdownPreview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim-airline"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">vim-airline</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#leetcode"><span class="nav-number">1.2.2.5.</span> <span class="nav-text">leetcode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#easymotion"><span class="nav-number">1.2.2.6.</span> <span class="nav-text">easymotion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim-surround"><span class="nav-number">1.2.2.7.</span> <span class="nav-text">vim-surround</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nerdcommenter"><span class="nav-number">1.2.2.8.</span> <span class="nav-text">nerdcommenter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim-visual-multi"><span class="nav-number">1.2.2.9.</span> <span class="nav-text">vim-visual-multi</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ultisnips"><span class="nav-number">1.2.2.10.</span> <span class="nav-text">ultisnips</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#autopep8"><span class="nav-number">1.2.2.11.</span> <span class="nav-text">autopep8</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#coc-nvim"><span class="nav-number">1.2.2.12.</span> <span class="nav-text">coc.nvim</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vimtex"><span class="nav-number">1.2.2.13.</span> <span class="nav-text">vimtex</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyon</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">123.3k</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'dwdKo6E0qSPCfOIBU3YjDFTT-gzGzoHsz',
+        appKey: '2heRJf2kpfcEaUSOE1fu03kX',
+        placeholder: '快来留下你的评论吧～',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.4"></script>
+
+
+  
+
+</body>
+</html>

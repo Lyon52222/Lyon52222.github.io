@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="torchtext," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LYON'S BLOG" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Iterator类是torchtext中用来对dataset进行处理产生batch使用的。 本来打算自己实现一个Iterator来实现。尝试了下发现行不通。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Torchtext:Iterator">
+<meta property="og:url" content="http://example.com/2021/01/25/Torchtext-Iterator/index.html">
+<meta property="og:site_name" content="LYON&#39;S BLOG">
+<meta property="og:description" content="Iterator类是torchtext中用来对dataset进行处理产生batch使用的。 本来打算自己实现一个Iterator来实现。尝试了下发现行不通。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-01-25T09:36:01.000Z">
+<meta property="article:modified_time" content="2021-01-25T13:35:23.900Z">
+<meta property="article:author" content="Lyon">
+<meta property="article:tag" content="torchtext">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/01/25/Torchtext-Iterator/"/>
+
+
+
+
+
+  <title>Torchtext:Iterator | LYON'S BLOG</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LYON'S BLOG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">In me the tiger sniffs the rose.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/25/Torchtext-Iterator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LYON'S BLOG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Torchtext:Iterator</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-25T17:36:01+08:00">
+                2021-01-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/01/25/Torchtext-Iterator/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/01/25/Torchtext-Iterator/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Iterator类是torchtext中用来对dataset进行处理产生batch使用的。 本来打算自己实现一个Iterator来实现。尝试了下发现行不通。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Iterator</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Defines an iterator that loads batches of data from a Dataset.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Attributes:</span></span><br><span class="line"><span class="string">        dataset: The Dataset object to load Examples from.</span></span><br><span class="line"><span class="string">        batch_size: Batch size.</span></span><br><span class="line"><span class="string">        batch_size_fn: Function of three arguments (new example to add, current</span></span><br><span class="line"><span class="string">            count of examples in the batch, and current effective batch size)</span></span><br><span class="line"><span class="string">            that returns the new effective batch size resulting from adding</span></span><br><span class="line"><span class="string">            that example to a batch. This is useful for dynamic batching, where</span></span><br><span class="line"><span class="string">            this function would add to the current effective batch size the</span></span><br><span class="line"><span class="string">            number of tokens in the new example.</span></span><br><span class="line"><span class="string">        sort_key: A key to use for sorting examples in order to batch together</span></span><br><span class="line"><span class="string">            examples with similar lengths and minimize padding. The sort_key</span></span><br><span class="line"><span class="string">            provided to the Iterator constructor overrides the sort_key</span></span><br><span class="line"><span class="string">            attribute of the Dataset, or defers to it if None.</span></span><br><span class="line"><span class="string">        train: Whether the iterator represents a train set.</span></span><br><span class="line"><span class="string">        repeat: Whether to repeat the iterator for multiple epochs. Default: False.</span></span><br><span class="line"><span class="string">        shuffle: Whether to shuffle examples between epochs.</span></span><br><span class="line"><span class="string">        sort: Whether to sort examples according to self.sort_key.</span></span><br><span class="line"><span class="string">            Note that shuffle and sort default to train and (not train).</span></span><br><span class="line"><span class="string">        sort_within_batch: Whether to sort (in descending order according to</span></span><br><span class="line"><span class="string">            self.sort_key) within each batch. If None, defaults to self.sort.</span></span><br><span class="line"><span class="string">            If self.sort is True and this is False, the batch is left in the</span></span><br><span class="line"><span class="string">            original (ascending) sorted order.</span></span><br><span class="line"><span class="string">        device (str or `torch.device`): A string or instance of `torch.device`</span></span><br><span class="line"><span class="string">            specifying which device the Variables are going to be created on.</span></span><br><span class="line"><span class="string">            If left as default, the tensors will be created on cpu. Default: None.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, dataset, batch_size, sort_key=<span class="literal">None</span>, device=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 batch_size_fn=<span class="literal">None</span>, train=<span class="literal">True</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 repeat=<span class="literal">False</span>, shuffle=<span class="literal">None</span>, sort=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 sort_within_batch=<span class="literal">None</span></span>):</span></span><br><span class="line">        warnings.warn(<span class="string">&#x27;&#123;&#125; class will be retired soon and moved to torchtext.legacy. Please see the most recent release notes for further information.&#x27;</span>.<span class="built_in">format</span>(self.__class__.__name__), UserWarning)</span><br><span class="line">        self.batch_size, self.train, self.dataset = batch_size, train, dataset</span><br><span class="line">        self.batch_size_fn = batch_size_fn</span><br><span class="line">        self.iterations = <span class="number">0</span></span><br><span class="line">        self.repeat = repeat</span><br><span class="line">        self.shuffle = train <span class="keyword">if</span> shuffle <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">else</span> shuffle</span><br><span class="line">        self.sort = <span class="keyword">not</span> train <span class="keyword">if</span> sort <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">else</span> sort</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> sort_within_batch <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            self.sort_within_batch = self.sort</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.sort_within_batch = sort_within_batch</span><br><span class="line">        <span class="keyword">if</span> sort_key <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            self.sort_key = dataset.sort_key</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.sort_key = sort_key</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(device, <span class="built_in">int</span>):</span><br><span class="line">            logger.warning(<span class="string">&quot;The `device` argument should be set by using `torch.device`&quot;</span></span><br><span class="line">                           + <span class="string">&quot; or passing a string as an argument. This behavior will be&quot;</span></span><br><span class="line">                           + <span class="string">&quot; deprecated soon and currently defaults to cpu.&quot;</span>)</span><br><span class="line">            device = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> device <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            device = torch.device(<span class="string">&#x27;cpu&#x27;</span>)</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">isinstance</span>(device, <span class="built_in">str</span>):</span><br><span class="line">            device = torch.device(device)</span><br><span class="line"></span><br><span class="line">        self.device = device</span><br><span class="line">        self.random_shuffler = RandomShuffler()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># For state loading/saving only</span></span><br><span class="line">        self._iterations_this_epoch = <span class="number">0</span></span><br><span class="line">        self._random_state_this_epoch = <span class="literal">None</span></span><br><span class="line">        self._restored_from_state = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">splits</span>(<span class="params">cls, datasets, batch_sizes=<span class="literal">None</span>, **kwargs</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;Create Iterator objects for multiple splits of a dataset.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Arguments:</span></span><br><span class="line"><span class="string">            datasets: Tuple of Dataset objects corresponding to the splits. The</span></span><br><span class="line"><span class="string">                first such object should be the train set.</span></span><br><span class="line"><span class="string">            batch_sizes: Tuple of batch sizes to use for the different splits,</span></span><br><span class="line"><span class="string">                or None to use the same batch_size for all splits.</span></span><br><span class="line"><span class="string">            Remaining keyword arguments: Passed to the constructor of the</span></span><br><span class="line"><span class="string">                iterator class being used.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> batch_sizes <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            batch_sizes = [kwargs.pop(<span class="string">&#x27;batch_size&#x27;</span>)] * <span class="built_in">len</span>(datasets)</span><br><span class="line">        ret = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(datasets)):</span><br><span class="line">            train = i == <span class="number">0</span></span><br><span class="line">            ret.append(cls(</span><br><span class="line">                datasets[i], batch_size=batch_sizes[i], train=train, **kwargs))</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">tuple</span>(ret)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">data</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;Return the examples in the dataset in order, sorted, or shuffled.&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> self.sort:</span><br><span class="line">            xs = <span class="built_in">sorted</span>(self.dataset, key=self.sort_key)</span><br><span class="line">        <span class="keyword">elif</span> self.shuffle:</span><br><span class="line">            xs = [self.dataset[i] <span class="keyword">for</span> i <span class="keyword">in</span> self.random_shuffler(<span class="built_in">range</span>(<span class="built_in">len</span>(self.dataset)))]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            xs = self.dataset</span><br><span class="line">        <span class="keyword">return</span> xs</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_epoch</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;Set up the batch generator for a new epoch.&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self._restored_from_state:</span><br><span class="line">            self.random_shuffler.random_state = self._random_state_this_epoch</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self._random_state_this_epoch = self.random_shuffler.random_state</span><br><span class="line"></span><br><span class="line">        self.create_batches()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self._restored_from_state:</span><br><span class="line">            self._restored_from_state = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self._iterations_this_epoch = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.repeat:</span><br><span class="line">            self.iterations = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_batches</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.batches = batch(self.data(), self.batch_size, self.batch_size_fn)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">epoch</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> math.floor(self.iterations / <span class="built_in">len</span>(self))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">if</span> self.batch_size_fn <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="keyword">raise</span> NotImplementedError</span><br><span class="line">        <span class="keyword">return</span> math.ceil(<span class="built_in">len</span>(self.dataset) / self.batch_size)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            self.init_epoch()</span><br><span class="line">            <span class="keyword">for</span> idx, minibatch <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.batches):</span><br><span class="line">                <span class="comment"># fast-forward if loaded from state</span></span><br><span class="line">                <span class="keyword">if</span> self._iterations_this_epoch &gt; idx:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                self.iterations += <span class="number">1</span></span><br><span class="line">                self._iterations_this_epoch += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> self.sort_within_batch:</span><br><span class="line">                    <span class="comment"># <span class="doctag">NOTE:</span> `rnn.pack_padded_sequence` requires that a minibatch</span></span><br><span class="line">                    <span class="comment"># be sorted by decreasing order, which requires reversing</span></span><br><span class="line">                    <span class="comment"># relative to typical sort keys</span></span><br><span class="line">                    <span class="keyword">if</span> self.sort:</span><br><span class="line">                        minibatch.reverse()</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        minibatch.sort(key=self.sort_key, reverse=<span class="literal">True</span>)</span><br><span class="line">                <span class="keyword">yield</span> Batch(minibatch, self.dataset, self.device)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> self.repeat:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">state_dict</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="string">&quot;iterations&quot;</span>: self.iterations,</span><br><span class="line">            <span class="string">&quot;iterations_this_epoch&quot;</span>: self._iterations_this_epoch,</span><br><span class="line">            <span class="string">&quot;random_state_this_epoch&quot;</span>: self._random_state_this_epoch&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">load_state_dict</span>(<span class="params">self, state_dict</span>):</span></span><br><span class="line">        self.iterations = state_dict[<span class="string">&quot;iterations&quot;</span>]</span><br><span class="line">        self._iterations_this_epoch = state_dict[<span class="string">&quot;iterations_this_epoch&quot;</span>]</span><br><span class="line">        self._random_state_this_epoch = state_dict[<span class="string">&quot;random_state_this_epoch&quot;</span>]</span><br><span class="line">        self._restored_from_state = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPTTIterator</span>(<span class="params">Iterator</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Defines an iterator for language modeling tasks that use BPTT.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Provides contiguous streams of examples together with targets that are</span></span><br><span class="line"><span class="string">    one timestep further forward, for language modeling training with</span></span><br><span class="line"><span class="string">    backpropagation through time (BPTT). Expects a Dataset with a single</span></span><br><span class="line"><span class="string">    example and a single field called &#x27;text&#x27; and produces Batches with text and</span></span><br><span class="line"><span class="string">    target attributes.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Attributes:</span></span><br><span class="line"><span class="string">        dataset: The Dataset object to load Examples from.</span></span><br><span class="line"><span class="string">        batch_size: Batch size.</span></span><br><span class="line"><span class="string">        bptt_len: Length of sequences for backpropagation through time.</span></span><br><span class="line"><span class="string">        sort_key: A key to use for sorting examples in order to batch together</span></span><br><span class="line"><span class="string">            examples with similar lengths and minimize padding. The sort_key</span></span><br><span class="line"><span class="string">            provided to the Iterator constructor overrides the sort_key</span></span><br><span class="line"><span class="string">            attribute of the Dataset, or defers to it if None.</span></span><br><span class="line"><span class="string">        train: Whether the iterator represents a train set.</span></span><br><span class="line"><span class="string">        repeat: Whether to repeat the iterator for multiple epochs. Default: False.</span></span><br><span class="line"><span class="string">        shuffle: Whether to shuffle examples between epochs.</span></span><br><span class="line"><span class="string">        sort: Whether to sort examples according to self.sort_key.</span></span><br><span class="line"><span class="string">            Note that shuffle and sort default to train and (not train).</span></span><br><span class="line"><span class="string">        device (str or torch.device): A string or instance of `torch.device`</span></span><br><span class="line"><span class="string">            specifying which device the Variables are going to be created on.</span></span><br><span class="line"><span class="string">            If left as default, the tensors will be created on cpu. Default: None.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, dataset, batch_size, bptt_len, **kwargs</span>):</span></span><br><span class="line">        self.bptt_len = bptt_len</span><br><span class="line">        <span class="built_in">super</span>(BPTTIterator, self).__init__(dataset, batch_size, **kwargs)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> math.ceil((<span class="built_in">len</span>(self.dataset[<span class="number">0</span>].text) / self.batch_size - <span class="number">1</span>)</span><br><span class="line">                         / self.bptt_len)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span>(<span class="params">self</span>):</span></span><br><span class="line">        text = self.dataset[<span class="number">0</span>].text</span><br><span class="line">        TEXT = self.dataset.fields[<span class="string">&#x27;text&#x27;</span>]</span><br><span class="line">        TEXT.eos_token = <span class="literal">None</span></span><br><span class="line">        text = text + ([TEXT.pad_token] * <span class="built_in">int</span>(math.ceil(<span class="built_in">len</span>(text) / self.batch_size)</span><br><span class="line">                                              * self.batch_size - <span class="built_in">len</span>(text)))</span><br><span class="line">        data = TEXT.numericalize(</span><br><span class="line">            [text], device=self.device)</span><br><span class="line">        data = data.view(self.batch_size, -<span class="number">1</span>).t().contiguous()</span><br><span class="line">        dataset = Dataset(examples=self.dataset.examples, fields=[</span><br><span class="line">            (<span class="string">&#x27;text&#x27;</span>, TEXT), (<span class="string">&#x27;target&#x27;</span>, TEXT)])</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(self) * self.bptt_len, self.bptt_len):</span><br><span class="line">                self.iterations += <span class="number">1</span></span><br><span class="line">                seq_len = <span class="built_in">min</span>(self.bptt_len, <span class="built_in">len</span>(data) - i - <span class="number">1</span>)</span><br><span class="line">                batch_text = data[i:i + seq_len]</span><br><span class="line">                batch_target = data[i + <span class="number">1</span>:i + <span class="number">1</span> + seq_len]</span><br><span class="line">                <span class="keyword">if</span> TEXT.batch_first:</span><br><span class="line">                    batch_text = batch_text.t().contiguous()</span><br><span class="line">                    batch_target = batch_target.t().contiguous()</span><br><span class="line">                <span class="keyword">yield</span> Batch.fromvars(</span><br><span class="line">                    dataset, self.batch_size,</span><br><span class="line">                    text=batch_text,</span><br><span class="line">                    target=batch_target)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> self.repeat:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BucketIterator</span>(<span class="params">Iterator</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Defines an iterator that batches examples of similar lengths together.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Minimizes amount of padding needed while producing freshly shuffled</span></span><br><span class="line"><span class="string">    batches for each new epoch. See pool for the bucketing procedure used.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_batches</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">if</span> self.sort:</span><br><span class="line">            self.batches = batch(self.data(), self.batch_size,</span><br><span class="line">                                 self.batch_size_fn)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.batches = pool(self.data(), self.batch_size,</span><br><span class="line">                                self.sort_key, self.batch_size_fn,</span><br><span class="line">                                random_shuffler=self.random_shuffler,</span><br><span class="line">                                shuffle=self.shuffle,</span><br><span class="line">                                sort_within_batch=self.sort_within_batch)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batch</span>(<span class="params">data, batch_size, batch_size_fn=<span class="literal">None</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Yield elements from data in chunks of batch_size.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> batch_size_fn <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">batch_size_fn</span>(<span class="params">new, count, sofar</span>):</span></span><br><span class="line">            <span class="keyword">return</span> count</span><br><span class="line">    minibatch, size_so_far = [], <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> ex <span class="keyword">in</span> data:</span><br><span class="line">        minibatch.append(ex)</span><br><span class="line">        size_so_far = batch_size_fn(ex, <span class="built_in">len</span>(minibatch), size_so_far)</span><br><span class="line">        <span class="keyword">if</span> size_so_far == batch_size:</span><br><span class="line">            <span class="keyword">yield</span> minibatch</span><br><span class="line">            minibatch, size_so_far = [], <span class="number">0</span></span><br><span class="line">        <span class="keyword">elif</span> size_so_far &gt; batch_size:</span><br><span class="line">            <span class="keyword">yield</span> minibatch[:-<span class="number">1</span>]</span><br><span class="line">            minibatch, size_so_far = minibatch[-<span class="number">1</span>:], batch_size_fn(ex, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> minibatch:</span><br><span class="line">        <span class="keyword">yield</span> minibatch</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pool</span>(<span class="params">data, batch_size, key, batch_size_fn=<span class="keyword">lambda</span> new, count, sofar: count,</span></span></span><br><span class="line"><span class="function"><span class="params">         random_shuffler=<span class="literal">None</span>, shuffle=<span class="literal">False</span>, sort_within_batch=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Sort within buckets, then batch, then shuffle batches.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Partitions data into chunks of size 100*batch_size, sorts examples within</span></span><br><span class="line"><span class="string">    each chunk using sort_key, then batch these examples and shuffle the</span></span><br><span class="line"><span class="string">    batches.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> random_shuffler <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        random_shuffler = random.shuffle</span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> batch(data, batch_size * <span class="number">100</span>, batch_size_fn):</span><br><span class="line">        p_batch = batch(<span class="built_in">sorted</span>(p, key=key), batch_size, batch_size_fn) \</span><br><span class="line">            <span class="keyword">if</span> sort_within_batch \</span><br><span class="line">            <span class="keyword">else</span> batch(p, batch_size, batch_size_fn)</span><br><span class="line">        <span class="keyword">if</span> shuffle:</span><br><span class="line">            <span class="keyword">for</span> b <span class="keyword">in</span> random_shuffler(<span class="built_in">list</span>(p_batch)):</span><br><span class="line">                <span class="keyword">yield</span> b</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">for</span> b <span class="keyword">in</span> <span class="built_in">list</span>(p_batch):</span><br><span class="line">                <span class="keyword">yield</span> b</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+
+    
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/torchtext/" rel="tag"># torchtext</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/25/Torchtext%E5%AD%A6%E4%B9%A0/" rel="next" title="Torchtext学习">
+                <i class="fa fa-chevron-left"></i> Torchtext学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/25/Batch-Epoch/" rel="prev" title="Batch-Epoch">
+                Batch-Epoch <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+
+    </footer>
+    
+        <div>
+          <iframe src="https://lyon52222.github.io/sponsor-page/drinks/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
+        </div>
+      
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <!--<a href="/archives/%7C%7C%20archive">-->
+                <a href="/archives/">
+
+              
+                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Lyon52222" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:lyon.tolean@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyon</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">123.3k</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'dwdKo6E0qSPCfOIBU3YjDFTT-gzGzoHsz',
+        appKey: '2heRJf2kpfcEaUSOE1fu03kX',
+        placeholder: '快来留下你的评论吧～',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.4"></script>
+
+
+  
+
+</body>
+</html>

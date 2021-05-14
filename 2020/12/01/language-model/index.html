@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.cat.net/css?family=Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="nlp,language_model," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LYON'S BLOG" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="NLP中的语言模型(language model)本文搬运自CSDN，并修改了其中一些错误。 什么是语言模型?统计语言模型是一个单词序列上的概率分布，对于一个给定长度为m的序列，它可以为整个序列产生一个概率 P(w_1,w_2,…,w_m) 。其实就是想办法找到一个概率分布，它可以表示任意一个句子或序列出现的概率。 目前在自然语言处理相关应用非常广泛，如语音识别(speech recognitio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="language_model">
+<meta property="og:url" content="http://example.com/2020/12/01/language-model/index.html">
+<meta property="og:site_name" content="LYON&#39;S BLOG">
+<meta property="og:description" content="NLP中的语言模型(language model)本文搬运自CSDN，并修改了其中一些错误。 什么是语言模型?统计语言模型是一个单词序列上的概率分布，对于一个给定长度为m的序列，它可以为整个序列产生一个概率 P(w_1,w_2,…,w_m) 。其实就是想办法找到一个概率分布，它可以表示任意一个句子或序列出现的概率。 目前在自然语言处理相关应用非常广泛，如语音识别(speech recognitio">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/2020/12/01/language-model/nnlm.png">
+<meta property="og:image" content="http://example.com/2020/12/01/language-model/cbow_skip-gram.png">
+<meta property="article:published_time" content="2020-12-01T12:36:22.000Z">
+<meta property="article:modified_time" content="2021-02-01T02:36:41.452Z">
+<meta property="article:author" content="Lyon">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="language_model">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/12/01/language-model/nnlm.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2020/12/01/language-model/"/>
+
+
+
+
+
+  <title>language_model | LYON'S BLOG</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LYON'S BLOG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">In me the tiger sniffs the rose.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/01/language-model/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LYON'S BLOG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">language_model</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-01T20:36:22+08:00">
+                2020-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/12/01/language-model/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/12/01/language-model/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="NLP中的语言模型-language-model"><a href="#NLP中的语言模型-language-model" class="headerlink" title="NLP中的语言模型(language model)"></a>NLP中的语言模型(language model)</h1><h4 id="本文搬运自CSDN，并修改了其中一些错误。"><a href="#本文搬运自CSDN，并修改了其中一些错误。" class="headerlink" title="本文搬运自CSDN，并修改了其中一些错误。"></a>本文搬运自<a target="_blank" rel="noopener" href="https://blog.csdn.net/huanghaocs/article/details/77935556">CSDN</a>，并修改了其中一些错误。</h4><hr>
+<h2 id="什么是语言模型"><a href="#什么是语言模型" class="headerlink" title="什么是语言模型?"></a>什么是语言模型?</h2><p>统计语言模型是一个单词序列上的<strong>概率分布</strong>，对于一个给定长度为m的序列，它可以为整个序列产生一个概率 P(w_1,w_2,…,w_m) 。其实就是想办法找到一个概率分布，它可以<strong>表示任意一个句子或序列出现的概率</strong>。</p>
+<p>目前在自然语言处理相关应用非常广泛，如语音识别(speech recognition) , 机器翻译(machine translation), 词性标注(part-of-speech tagging), 句法分析(parsing)等。传统方法主要是基于统计学模型，最近几年基于神经网络的语言模型也越来越成熟。</p>
+<h2 id="Unigram-models"><a href="#Unigram-models" class="headerlink" title="Unigram models"></a>Unigram models</h2><p>Unigram models也即一元文法模型，它是一种上下文无关模型。该模型仅仅考虑当前词本身出现的概率，而不考虑当前词的上下文环境。概率形式为</p>
+<script type="math/tex; mode=display">P ( w_1 , w_2 , . . . , w_m ) = P ( w_1 ) ∗ P ( w_2 ) ∗ . . . ∗ P ( w_m ) P(w_1,w_2,...,w_m)</script><p>即一个句子出现的概率等于句子中<strong>每个单词概率乘积</strong>。<br>以一篇文档为例，每个单词的概率只取决于该单词本身在文档中的概率，而文档中所有词出现的概率和为1，每个词的概率可以用该词在文档中出现的频率来表示，如下表中</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Terms</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>world</td>
+<td>0.2</td>
+</tr>
+<tr>
+<td>likes</td>
+<td>0.05</td>
+</tr>
+<tr>
+<td>we</td>
+<td>0.03</td>
+</tr>
+<tr>
+<td>share</td>
+<td>0.26</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>对于这篇文档中，所有概率和相加为1，即</p>
+<p>$\sum P(term) = 1$</p>
+<h2 id="n-gram模型"><a href="#n-gram模型" class="headerlink" title="n-gram模型"></a>n-gram模型</h2><p>n-gram models也即n元语言模型，针对一个句子$w_1,w_2,…,w_m$的概率表示如下：</p>
+<script type="math/tex; mode=display">P(w_1,w_2,...,w_m)= \prod_{i=1}^{m}P(w_i|w_1,...,w_{i-1})=\prod_{i=1}^{m}P(w_i|w_{i-(n-1),...,w_{i-1}})</script><p>这里可以理解为当前词的概率与前面的n个词有关系，可以理解为上下文有关模型。</p>
+<p>n-gram模型中的条件概率可以用词频来计算：</p>
+<script type="math/tex; mode=display">P(w_i|w_{i-(n-1)},...,w_{i-1})=\frac{count(w_{i-(n-1)},...,w_{i-1},w_i)}{count(w_{i-(n-1)},...,w_{i-1})}</script><p>​    </p>
+<p>这里举个栗子：我们的原始文档是 doc = “我不想写代码了” ，经过中文分词处理后为 words = [“我”, “不想”, “写”, “代码”, “了”]。</p>
+<p>那么产生原始文档doc的概率为：<br>P(我, 不想, 写, 代码, 了) = P(我) x P(不想|我) x P(写|我, 不想) x P(代码|我, 不想, 写) x P (了|我, 不想, 写, 代码)</p>
+<p>相乘的每个概率可以通过统计词频来获得：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>n-gram</th>
+<th>probability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P(不想 &#124; 我) =</td>
+<td>count(我, 不想) / count(我)</td>
+</tr>
+<tr>
+<td>P(写 &#124; 我, 不想) =</td>
+<td>count(我, 不想, 写) / count(我, 不想)</td>
+</tr>
+<tr>
+<td>P(代码 &#124; 我, 不想, 写) =</td>
+<td>count(我, 不想, 写, 代码) / count(我, 不想, 写)</td>
+</tr>
+<tr>
+<td>P(了 &#124; 我, 不想, 写, 代码) =</td>
+<td>count(我, 不想, 写, 代码, 了) / count(我, 不想, 写, 代码)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>如果像上面这样去计算，会疯掉的。。。这种计算太复杂了，所以我们是否可以简化只考虑少数的词呢，如二元bigram模型，当前词只与它前面的一个词相关，这样概率求解就简化很多：</p>
+<script type="math/tex; mode=display">P(w_1,w_2,...,w_m)=\prod_{i=1}^{m}P(w_i|w_{i-(n-1),...,w_{i-1}}) = \prod_{i=1}^{m}P(w_i|w_{w_{i-1}})</script><p>上面那个栗子也可以简化了：</p>
+<p>P(我, 不想, 写, 代码, 了) = P(我) x P(不想|我) x P(写|不想) x P(代码|写) x P (了|代码)</p>
+<p>相乘的每个概率就更简单了：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>bigram</th>
+<th>probability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P(不想 ｜ 我) =</td>
+<td>count(我, 不想) / count(我)</td>
+</tr>
+<tr>
+<td>P(写 ｜ 不想) =</td>
+<td>count(不想, 写) / count(不想)</td>
+</tr>
+<tr>
+<td>P(代码 ｜ 写) =</td>
+<td>count(写, 代码) / count(写)</td>
+</tr>
+<tr>
+<td>P(了 ｜ 代码) =</td>
+<td>count(代码, 了) / count(代码)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>这样我们只需要计算语料中每个词出现的次数，以及每两个词出现的次数，就可以求上面的概率了。</p>
+<p>这里是以二元模型说明，你也可以使用三元(trigram)、四元模型，方法类似不在多说。前面提到的 Unigram模型其实就是一元模型。</p>
+<h2 id="神经网络语言模型-NNLM"><a href="#神经网络语言模型-NNLM" class="headerlink" title="神经网络语言模型(NNLM)"></a>神经网络语言模型(NNLM)</h2><p>神经语言模型使用连续表示或词汇Embedding来进行预测。 以神经网络为基础来训练模型。</p>
+<p><img src="/2020/12/01/language-model/nnlm.png" width="80%"></p>
+<p>输入：n-1个之前的word（用词典库V中的index表示）</p>
+<p>映射：通过|V|*D的矩阵C映射到D维</p>
+<p>隐层：映射层连接大小为H的隐层</p>
+<p>输出：输出层大小为|V|，表示|V|个词中每个词的概率</p>
+<p>网络第一层：将 $C(w_{t-n+1}), … ,C(w_{t-2}),C(w_{t-1})$这n-1个向量首尾相接拼起来，形成一个(n-1)*m维的向量，记为输出x。</p>
+<p>网络第二层：就是神经网络的隐藏层，直接使用 $d+Hx$ 计算得到，H是权重矩阵，d是一个偏置向量。然后使用tanh作为激活函数。</p>
+<p>网络第三层：输出一共有|V|个节点，每个节点 $y_i$ 表示下一个词为i的未归一化log概率，最后使用softmax激活函数将输出值y归一化成概率。y的计算公式：</p>
+<script type="math/tex; mode=display">y = b+Wx+Utanh(d+Hx)</script><p>式中U是一个|V| X h 的矩阵，表示隐藏层到输出层的参数；W是|V| x (n-1)m的矩阵，这个矩阵包含了从输入层到输出层的直连边，就是从输入层直接到输出层的一个线性变换。</p>
+<script type="math/tex; mode=display">p = softmax(y)</script><h2 id="word2vec模型"><a href="#word2vec模型" class="headerlink" title="word2vec模型"></a>word2vec模型</h2><p><strong>word2vec</strong>分为两个基础模型<strong>CBOW</strong>和<strong>Skip-gram</strong>，其中CBOW模型是根据上下文词预测当前词，Skip-gram模型是根据当前词预测它的上下文，其实都是在发现语料中局部词汇之间的共现关系。</p>
+<p><img src="/2020/12/01/language-model/cbow_skip-gram.png" width="80%"></p>
+<h3 id="CBOW"><a href="#CBOW" class="headerlink" title="CBOW"></a>CBOW</h3><p>CBOW模型是在语料中设置一个窗口，每次滑动这个窗口，根据窗口除中心词之前的其他词，来预测中心词，就是根据上下文窗口词预测当前中心词，还是以前面的例子具体说明一下，<br>原始doc = “我真不想写代码了”，分词后 words = [“我”, “真”, “不想”, “写”, “代码”, “了”]。<br>如果窗口window_size = 3, 则window1 = [“真”, “不想”, “写”]、window2 = [“不想”, “写”, “代码”]等3个词的窗口，对应CBOW模型的输入和输出：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>input</th>
+<th>output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[“真”, “写”]</td>
+<td>“不想”</td>
+</tr>
+<tr>
+<td>[“不想”, “代码”]</td>
+<td>“写”</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>如果窗口window_size = 5, 则window1 = [“我”, “真”, “不想”, “写”, “代码”]、 window2 = [“真”, “不想”, “写”, “代码”, “了”] 等5个词的窗口，对应CBOW模型的输入和输出：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>input</th>
+<th>output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[“我”, “真”, “写”, “代码”]</td>
+<td>“不想”</td>
+</tr>
+<tr>
+<td>[“真”, “不想”, “代码”, “了”]</td>
+<td>“写”</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>而具体计算是要获得每个输入词的向量表示，然后求和取平均值，最后完成词汇表大小的分类任务。<br>对应公式就是假设当前词是w，w对应的上下文窗口词是context(w)，windows_size = 2c + 1，context(w)由w前后各c个词构成。</p>
+<p><strong>输入层</strong>：包含context(w)中2c个词的词向量，$v(context(w)_1),v(context(w)_2)$，…。这里的词向量通过词编号映射得到，也就是我们模型要学习的词向量，词向量维度设为m。</p>
+<p><strong>投影层</strong>：对输入的2c个向量做求和累加，公式标识如下， 其中 $x_w \in R^mx$</p>
+<script type="math/tex; mode=display">x_w = \sum_{i=1}^{2c}v({Context(w)}_i)</script><p>对应上面window_size = 5的第一个例子就是 $x_{不想}$ = v(我) + v(真) + v(写) + v(代码)。</p>
+<p><strong>输出层</strong>：对应输出层最直观的方法是，投影层得到的 $x_w$</p>
+<p>直接乘以一个和词表大小一样的权重矩阵，然后过一层softmax函数得到词表大小的一个概率分布向量，取其中概率最大的为预测结果词。设U是一个$V × m$的矩阵，V对应词表大小，m对应词向量维度，b对应偏置项，我们可以得到上下文context(w)预测当前词w的概率分布。</p>
+<script type="math/tex; mode=display">p(w|context(w)) = softmax(Ux_w + b)</script><p>然后用概率分布$p(w|context(w))$与真实label的交叉熵作为损失函数，来训练模型。这里理论上可行，但是训练速度很慢，一般词表大小v都在几十万，每次求softmax是非常耗时。所以word2vec就在这个输出还用层次softmax来优化，从而加速模型训练过程。</p>
+<h3 id="Hierarchical-Softmax（层次Softmax）"><a href="#Hierarchical-Softmax（层次Softmax）" class="headerlink" title="Hierarchical Softmax（层次Softmax）"></a>Hierarchical Softmax（层次Softmax）</h3><p>具体就是根据词表中词的出现频率作为权重来构造Huffman树，这样树的叶子节点对应的就是每个词，按照叶子节点对应的路劲就能找到每个词，简单理解就是我们用这样一颗树来存储我们的词表，可以加速输出层的计算。<br>具体过程首先定义几个变量：</p>
+<ul>
+<li><p>$p^w$从根节点出发到词w对应叶子节点的路劲；</p>
+</li>
+<li><p>$l^w$ 路径 $p^w$ 中包含的结点个数；</p>
+</li>
+<li><p>$p_1^w,p_2^w,…,p_{l^w}^w$ 路径$p^w$中的$l^w$个节点，其中$p_1^w$表示根结点，$p_{l^w}^w$表示词$w$对应的结点；</p>
+</li>
+<li><p>$d_2^w,d_3^w,…,d_{l^w}^w \in \{0,1\}$ 词$w$的Huffman编码，它由$l^w-1$位编码构成，$d_j^w$表示路径$p^w$中第$j$个结点对应的编码（根结点不对应编码）</p>
+</li>
+<li><p>$\theta_1^w,\theta_2^w,…,\theta_{l^w-1}^w \in R^m$ 路径$p^w$中<strong>非叶子结点</strong>对应的向量，$\theta_j^w$表示路径$p^w$中第$j$个非叶子结点对应的向量。 </p>
+</li>
+</ul>
+<p><em>这里为什么要给Haffuman树中的非叶子向量也定义一个同长的向量呢？ 其实它们只是辅助向量</em></p>
+<p>计算概率的方法是对词w所在路径每个节点进行二分类，并把节点二分类的概率进行相乘，从而得到词w的概率$p(w|context(w))$。对应的二分类可以用逻辑回归，假设0代表正类，1代表负类，</p>
+<h4 id="正类概率-："><a href="#正类概率-：" class="headerlink" title="正类概率 ："></a>正类概率 ：</h4><script type="math/tex; mode=display">p(0|x_w^{T}) = \sigma (x_w^{T}) = \frac{1}{1 + e^{-x_w^{T}\theta}}</script><h4 id="负类概率："><a href="#负类概率：" class="headerlink" title="负类概率："></a>负类概率：</h4><script type="math/tex; mode=display">p(1|x_w^{T}) = 1 - \sigma (x_w^{T})</script><p>求得词w对应路劲上每个节点的分类概率后，$p(w|context(w))$对应跟一般的概率表示：</p>
+<script type="math/tex; mode=display">p(w|context(w)) = \prod_{j=2}^{l^w} p(d_j^w|x_w,{\theta}_{j-1}^w)</script><p>其中根据逻辑回归可得：</p>
+<script type="math/tex; mode=display">p(d_j^w|x_w,{\theta}_{j-1}^w) = 
+\begin{cases}
+σ(x_w^T θ_{j−1}^w)&,&d_j^w=0 \\\\
+1−σ(x_w^Tθ_{j−1}^w)&,&d_j^w=1 
+\end{cases}</script><p>上式也可以表示为：</p>
+<script type="math/tex; mode=display">p(d_{j}^{w}|x_{w},{\theta}_{j-1}^{w}) = {[\sigma(x_{w}^{T}{\theta}_{j-1}^{w})]^{1-d_{j}^{w}}}\cdot [1- \sigma(x_{w}^{T}{\theta}_{j-1}^{w})]^{d_{j}^{w}}</script><p>p(w|context(w))可以表示为：</p>
+<script type="math/tex; mode=display">p(w|context(w)) = \prod_{j=2}^{l^w}p(d_j^w|x_w,{\theta}_{j-1}^w) = \prod_{j=2}^{l^w}[\sigma(x_w^T{\theta}_{j-1}^w)]^{1-d_j^w}\cdot [1- \sigma(x_w^T{\theta}_{j-1}^w)]^{d_j^w}</script><p>优化的目标，对数似然函数为：</p>
+<script type="math/tex; mode=display">L = \sum_{w\in C}\log{p(w|Context(w))}</script><p>将p(w|context(w))带入到对数似然函数中，得到最终的优化函数：</p>
+<script type="math/tex; mode=display">L = \sum_{w\in C}\log{\prod_{j=2}^{l^w}[\sigma(x_w^T{\theta}_{j-1}^w)]^{1-d_j^w}\cdot [1- \sigma(x_w^T{\theta}_{j-1}^w)]^{d_j^w}} \\ =\sum_{w\in C}\sum_{j=2}^{l^w}\{(1-d_j^w)\log[\sigma(x_w^T{\theta}_{j-1}^w)]+d_j^w\log[1- \sigma(x_w^T{\theta}_{j-1}^w)]\}</script><h3 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h3><p>Skip-gram模型也要设置一个窗口，每次滑动窗口，根据窗口中心词预测窗口内其他词，就是根据当前词预测上下文窗口词。还是以例子先理解一下。<br>原始doc = “我不想写代码了”，分词后 words = [“我”, “真”, “不想”, “写”, “代码”, “了”]。<br>如果窗口window_size = 3， 则window1 = [“真”, “不想”, “写”]、window2 = [“不想”, “写”, “代码”]，对应Skip-gram模型的输入和输出：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>input</th>
+<th>context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“不想”</td>
+<td>[“真” ,“写” ]</td>
+</tr>
+<tr>
+<td>“写”</td>
+<td>[“不想” ,“代码”]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>如果窗口window_size = 5， 则window1 = [“我”, “真”, “不想”, “写”, “代码”]、window2 = [“真”, “不想”, “写”, “代码”, “了”]，对应Skip-gram模型的输入和输出：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>input</th>
+<th>context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“不想”</td>
+<td>[“我” ,“真” ,“写”,“代码” ]</td>
+</tr>
+<tr>
+<td>“写”</td>
+<td>[“真”,“不想”, “代码”, “了” ]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Skip-gram中给出当前词w，需要预测它的上下文词Context(w)，概率表示如下：</p>
+<script type="math/tex; mode=display">p(Context(w)|w) = \prod_{u\in Context(w)}p(u|w)</script><p>这里的w就是上面表格中的input，u就是input对应的context中的词，这里取的时context中的词概率相乘。<br>比如对上面的例子input=“不想”, context = [“我” ,“真” ,“写”,“代码” ]，概率计算如下：<br>p(Context(不想)|不想) = p(我|不想) x p(真|不想) x p(写|不想) x p(代码|不想)</p>
+<h4 id="Hierarchical-Softmax（层次Softmax）-1"><a href="#Hierarchical-Softmax（层次Softmax）-1" class="headerlink" title="Hierarchical Softmax（层次Softmax）"></a>Hierarchical Softmax（层次Softmax）</h4><p>类似前面CBOW模型，输出层也是用层次softmax来优化。上面p(u|w)就可以表示成词w的向量表示 $x_w$ 与词u的哈夫曼树路径表示相乘。</p>
+<script type="math/tex; mode=display">p(u|w) = \prod_{j=2}^{l^u}p(d_j^u|x_w,\theta _{j-1}^u)</script><p>路径中每一步概率可表示为：</p>
+<script type="math/tex; mode=display">p(d_j^u|x_w,{\theta}_{j-1}^u) = {[\sigma(x_w^T{\theta}_{j-1}^u)]^{1-d_j^u}}\cdot [1- \sigma(x_w^T{\theta}_{j-1}^u)]^{d_j^u}</script><p>同样对优化的目标，对数似然函数为：</p>
+<script type="math/tex; mode=display">L = \sum_{w\in C}\log{p(Context(w)|w)}</script><p>带入p(u|w) 得到最终的优化函数：</p>
+<script type="math/tex; mode=display">L = \sum_{w\in C}\log\prod_{u\in Context(w)}p(u|w) = \sum_{w\in C}\sum_{u\in Context(w)}\log p(u|w) \\ = \sum_{w\in C}\sum_{u\in Context(w)}\log{\prod_{j=2}^{l^u}[\sigma(x_w^T{\theta}_{j-1}^u)]^{1-d_j^u}\cdot [1- \sigma(x_w^T{\theta}_{j-1}^u)]^{d_j^u}} \\ =\sum_{w\in C}\sum_{u\in Context(w)}\sum_{j=2}^{l^u}\{(1-d_j^u)\log[\sigma(x_w^T{\theta}_{j-1}^u)]+d_j^u\log[1- \sigma(x_w^T{\theta}_{j-1}^u)]\}</script><p><strong>关于word2vec中的数学原理，这篇博客讲的很详细</strong><a target="_blank" rel="noopener" href="https://www.cnblogs.com/peghoty/p/3857839.html">word2vec 中的数学原理详解</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+
+    
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nlp/" rel="tag"># nlp</a>
+          
+            <a href="/tags/language-model/" rel="tag"># language_model</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/30/loss-function/" rel="next" title="loss_function">
+                <i class="fa fa-chevron-left"></i> loss_function
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/02/GCN/" rel="prev" title="GCN">
+                GCN <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+
+    </footer>
+    
+        <div>
+          <iframe src="https://lyon52222.github.io/sponsor-page/drinks/index.html" style="overflow-x:hidden;overflow-y:hidden; border:0xp none #fff; min-height:240px; width:100%;"  frameborder="0" scrolling="no"></iframe>
+        </div>
+      
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <!--<a href="/archives/%7C%7C%20archive">-->
+                <a href="/archives/">
+
+              
+                  <span class="site-state-item-count">105</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Lyon52222" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:lyon.tolean@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NLP%E4%B8%AD%E7%9A%84%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B-language-model"><span class="nav-number">1.</span> <span class="nav-text">NLP中的语言模型(language model)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E6%96%87%E6%90%AC%E8%BF%90%E8%87%AACSDN%EF%BC%8C%E5%B9%B6%E4%BF%AE%E6%94%B9%E4%BA%86%E5%85%B6%E4%B8%AD%E4%B8%80%E4%BA%9B%E9%94%99%E8%AF%AF%E3%80%82"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">本文搬运自CSDN，并修改了其中一些错误。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">什么是语言模型?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unigram-models"><span class="nav-number">1.2.</span> <span class="nav-text">Unigram models</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-gram%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">n-gram模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B-NNLM"><span class="nav-number">1.4.</span> <span class="nav-text">神经网络语言模型(NNLM)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#word2vec%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.</span> <span class="nav-text">word2vec模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CBOW"><span class="nav-number">1.5.1.</span> <span class="nav-text">CBOW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hierarchical-Softmax%EF%BC%88%E5%B1%82%E6%AC%A1Softmax%EF%BC%89"><span class="nav-number">1.5.2.</span> <span class="nav-text">Hierarchical Softmax（层次Softmax）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E7%B1%BB%E6%A6%82%E7%8E%87-%EF%BC%9A"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">正类概率 ：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%9F%E7%B1%BB%E6%A6%82%E7%8E%87%EF%BC%9A"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">负类概率：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Skip-gram"><span class="nav-number">1.5.3.</span> <span class="nav-text">Skip-gram</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hierarchical-Softmax%EF%BC%88%E5%B1%82%E6%AC%A1Softmax%EF%BC%89-1"><span class="nav-number">1.5.3.1.</span> <span class="nav-text">Hierarchical Softmax（层次Softmax）</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lyon</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">123.3k</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'dwdKo6E0qSPCfOIBU3YjDFTT-gzGzoHsz',
+        appKey: '2heRJf2kpfcEaUSOE1fu03kX',
+        placeholder: '快来留下你的评论吧～',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.4"></script>
+
+
+  
+
+</body>
+</html>
